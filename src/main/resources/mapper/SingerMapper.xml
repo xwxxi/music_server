@@ -12,17 +12,17 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,name,sex,pic,birth,location,introduction
+        id,`name`,sex,pic,birth,location,introduction
     </sql>
 
     <insert id="insert" parameterType="com.hunk.music.domain.Singer">
-        insert info singer
+        insert into singer
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
                 id,
             </if>
             <if test="name != null">
-                name,
+                `name`,
             </if>
             <if test="sex != null">
                 sex,
@@ -54,7 +54,7 @@
                 #{pic},
             </if>
             <if test="birth != null">
-                #{birthE},
+                #{birth},
             </if>
             <if test="location != null">
                 #{location},
@@ -78,7 +78,7 @@
                 pic = #{pic},
             </if>
             <if test="birth != null">
-                birth = #{birthE},
+                birth = #{birth},
             </if>
             <if test="location != null">
                 location = #{location},
@@ -120,6 +120,10 @@
         <include refid="Base_Column_List"/>
         from singer
         where sex = #{sex}
+    </select>
+
+    <select id="findAllClass" resultMap="BaseResultMap">
+        SELECT * FROM singer
     </select>
 
 </mapper>

@@ -1,5 +1,7 @@
 package com.hunk.music.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.hunk.music.dao.SingerMapper;
 import com.hunk.music.domain.Singer;
 import com.hunk.music.service.SingerService;
@@ -84,5 +86,20 @@ public class SingerServiceImpl implements SingerService {
     @Override
     public List<Singer> singerOfSex(Integer sex) {
         return singerMapper.singerOfSex(sex);
+    }
+
+    /**
+     * 分页
+     * @param pageCode
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public PageInfo<Singer> findByPageService(int pageCode, int pageSize) {
+        //使用Mybatis分页插件
+        PageHelper.startPage(pageCode,pageSize);
+        //调用分页查询方法，其实就是查询所有数据，mybatis自动帮我们进行分页计算
+        List<Singer> classInfos = singerMapper.findAllClass();
+        return new PageInfo<>(classInfos);
     }
 }

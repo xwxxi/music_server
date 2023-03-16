@@ -1,5 +1,6 @@
 package com.hunk.music.service;
 
+import com.github.pagehelper.PageInfo;
 import com.hunk.music.domain.Singer;
 
 import java.util.List;
@@ -43,4 +44,9 @@ public interface SingerService {
      * 根据性别查询
      */
     public List<Singer> singerOfSex(Integer sex);
+
+    /**
+     * 分页
+     */
+    public PageInfo<Singer> findByPageService(int pageCode, int pageSize);
 }

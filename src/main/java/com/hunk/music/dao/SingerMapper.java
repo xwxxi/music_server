@@ -44,4 +44,9 @@ public interface SingerMapper {
      * 根据性别查询
      */
     public List<Singer> singerOfSex(Integer sex);
+
+    /**
+     * 分页
+     */
+    public List<Singer> findAllClass();
 }
