@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.hunk.music.domain.Singer;
 import com.hunk.music.service.SingerService;
 import com.hunk.music.utils.R;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,6 +21,11 @@ import java.util.Map;
 @RestController
 @RequestMapping("/singer")
 public class SingerController {
+
+    /**
+     * 默认的头像地址
+     */
+    private String picPath = "/img/singerPic/hhh.jpg";
 
     @Resource
     private SingerService singerService;
@@ -68,6 +74,16 @@ public class SingerController {
      */
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
     public R deleteSinger(Integer id) {
+        Singer singer = singerService.selectByPrimaryKey(id);
+        // 如果歌手头像不是默认的就把图片资源删除
+        if (!singer.getPic().equals(picPath)) {
+            File tempFile = new File(singer.getPic().trim());
+            String fileName = tempFile.getName();
+            String filePath = System.getProperty("user.dir") + System.getProperty("file.separator") + "img"
+                    + System.getProperty("file.separator") + "singerPic" + System.getProperty("file.separator") + fileName;
+            System.out.println(filePath);
+            FileSystemUtils.deleteRecursively(new File(filePath));
+        }
         boolean ret = singerService.delete(id);
         Map<String, Object> map = new HashMap<>();
         if (ret) {
@@ -133,6 +149,7 @@ public class SingerController {
 
     /**
      * 更歌手头像文件
+     *
      * @param file
      * @param id
      * @return
@@ -181,9 +198,9 @@ public class SingerController {
      * 分页
      */
     @CrossOrigin
-    @RequestMapping(value = "/pagehelper/{pageCode}/{pageSize}",method = RequestMethod.GET)
+    @RequestMapping(value = "/pagehelper/{pageCode}/{pageSize}", method = RequestMethod.GET)
     public PageInfo<Singer> findByPage(@PathVariable(value = "pageCode") int pageCode, @PathVariable(value = "pageSize") int pageSize) {
-        System.out.println(pageCode+"...."+pageSize);
+        System.out.println(pageCode + "...." + pageSize);
         PageInfo<Singer> pageInfo = singerService.findByPageService(pageCode, pageSize);
         return pageInfo;
     }
