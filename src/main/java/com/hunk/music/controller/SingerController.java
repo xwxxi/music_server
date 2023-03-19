@@ -173,6 +173,8 @@ public class SingerController {
 
         // 实际静态资源存放的地方
         File dest = new File(filePath + System.getProperty("file.separator") + fileName);
+
+        // 数据库里写的地址
         String storeAvatarPath = "/img/singerPic/" + fileName;
 
         try {
