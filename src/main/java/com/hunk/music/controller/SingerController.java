@@ -159,6 +159,18 @@ public class SingerController {
         if (file.isEmpty()) {
             return R.error("文件上传失败");
         }
+
+        Singer singerObj = singerService.selectByPrimaryKey(id);
+        // 如果歌手头像不是默认的就把图片资源删除
+        if (!singerObj.getPic().equals(picPath)) {
+            File tempFile = new File(singerObj.getPic().trim());
+            String fileName = tempFile.getName();
+            String filePath = System.getProperty("user.dir") + System.getProperty("file.separator") + "img"
+                    + System.getProperty("file.separator") + "singerPic" + System.getProperty("file.separator") + fileName;
+            System.out.println(filePath);
+            FileSystemUtils.deleteRecursively(new File(filePath));
+        }
+
         // 获取文件明  加上毫秒值是为了区分相同的名称
         String fileName = System.currentTimeMillis() + file.getOriginalFilename();
         // 服务器存储图片的路径

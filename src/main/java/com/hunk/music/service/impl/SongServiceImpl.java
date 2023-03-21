@@ -82,7 +82,7 @@ public class SongServiceImpl implements SongService {
      * @param singerId
      */
     @Override
-    public List<Song> songOfSex(Integer singerId) {
+    public List<Song> songOfSingerId(Integer singerId) {
         return songMapper.songOfSingerId(singerId);
     }
 }

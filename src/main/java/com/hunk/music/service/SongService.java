@@ -42,6 +42,6 @@ public interface SongService {
     /**
      * 根据歌手id查询
      */
-    public List<Song> songOfSex(Integer singerId);
+    public List<Song> songOfSingerId(Integer singerId);
 
 }

@@ -77,7 +77,7 @@
     </insert>
 
     <update id="update" parameterType="com.hunk.music.domain.Song">
-        update singer
+        update song
         <set>
             <if test="singerId != null">
                 singer_id = #{singerId},
@@ -120,17 +120,17 @@
         from song
     </select>
 
-    <select id="singerOfName" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
+    <select id="songOfName" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
         select
         <include refid="Blob_Column_List"/>
         from song
         where `name` like #{name}
     </select>
 
-    <select id="singerOfSingerId" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer">
+    <select id="songOfSingerId" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer">
         select
         <include refid="Blob_Column_List"/>
-        from singer
+        from song
         where singer_id = #{singerId}
     </select>
 
