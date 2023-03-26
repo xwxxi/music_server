@@ -79,9 +79,6 @@ public class SongController {
         }
     }
 
-    public R updateSong() {
-        return R.ok();
-    }
 
     /**
      * 根据歌手id进行查询
@@ -104,7 +101,7 @@ public class SongController {
      * @return
      */
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
-    public R deleteSinger(Integer id) {
+    public R deleteSong(Integer id) {
         Song song = songService.selectByPrimaryKey(id);
         // 如果歌曲头像不是默认的就把图片资源删除
         if (song.getPic() != null && !song.getPic().equals(picPath)) {
@@ -143,7 +140,7 @@ public class SongController {
      * @return
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public R updateSinger(@RequestBody Song song) {
+    public R updateSong(@RequestBody Song song) {
         boolean ret = songService.update(song);
         Map<String, Object> map = new HashMap<>();
         if (ret) {
@@ -200,6 +197,66 @@ public class SongController {
             Song song = new Song();
             song.setId(id);
             song.setPic(storeAvatarPath);
+            boolean update = songService.update(song);
+            Map<String, Object> map = new HashMap<>();
+            if (update) {
+                map.put("msg", "更新成功");
+                map.put("pic", storeAvatarPath);
+                return R.ok(map);
+            } else {
+                return R.error("更新失败");
+            }
+        } catch (IOException e) {
+            return R.error("发生异常" + e.getMessage());
+        }
+    }
+
+
+    /**
+     * 更歌手歌曲文件
+     *
+     * @param file
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/updateSongFile", method = RequestMethod.POST)
+    public R updateSongFile(MultipartFile file, Integer id) {
+        if (file.isEmpty()) {
+            return R.error("文件上传失败");
+        }
+
+        Song songObj = songService.selectByPrimaryKey(id);
+        if (songObj.getUrl() != null) {
+            File tempFile = new File(songObj.getUrl().trim());
+            String fileName = tempFile.getName();
+            String filePath = System.getProperty("user.dir") + System.getProperty("file.separator") + "song"
+                    + System.getProperty("file.separator") + fileName;
+            System.out.println(filePath);
+            FileSystemUtils.deleteRecursively(new File(filePath));
+        }
+
+        // 获取文件明  加上毫秒值是为了区分相同的名称
+        String fileName = System.currentTimeMillis() + file.getOriginalFilename();
+        // 服务器存储图片的路径
+        String filePath = System.getProperty("user.dir") + System.getProperty("file.separator") + "song";
+
+        // 判断路径是否存在 如果不存在就新增
+        File temFile = new File(filePath);
+        if (!temFile.exists()) {
+            temFile.mkdir();
+        }
+
+        // 实际静态资源存放的地方
+        File dest = new File(filePath + System.getProperty("file.separator") + fileName);
+
+        // 数据库里写的地址
+        String storeAvatarPath = "/song/" + fileName;
+
+        try {
+            file.transferTo(dest);
+            Song song = new Song();
+            song.setId(id);
+            song.setUrl(storeAvatarPath);
             boolean update = songService.update(song);
             Map<String, Object> map = new HashMap<>();
             if (update) {

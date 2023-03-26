@@ -1,11 +1,12 @@
 package com.hunk.music.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * 歌曲管理表实体类
  */
-public class Song {
+public class Song implements Serializable {
 
     /** 自增id */
     private Integer id;
