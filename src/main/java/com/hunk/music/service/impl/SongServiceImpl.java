@@ -67,7 +67,7 @@ public class SongServiceImpl implements SongService {
     }
 
     /**
-     * 根据歌曲名字进行模糊查询
+     * 根据歌曲名字进行查询
      *
      * @param name
      */

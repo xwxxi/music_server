@@ -1,7 +1,9 @@
 package com.hunk.music.controller;
 
 import com.hunk.music.domain.ListSong;
+import com.hunk.music.domain.Song;
 import com.hunk.music.service.ListSongService;
+import com.hunk.music.service.SongService;
 import com.hunk.music.utils.R;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,16 +107,32 @@ public class ListSongController {
         return R.ok(map);
     }
 
+
+    @Resource
+    private SongService songService;
+
     /**
-     * 根据主键查询歌单歌曲
+     * 根据歌单id查询歌单歌曲
      *
      * @return
      */
     @RequestMapping(value = "/getSongBySongListId", method = RequestMethod.GET)
     public R getSongBySongListId(Integer songListId) {
         List<ListSong> listSongs = listSongService.getSongBySongListId(songListId);
+        List<Object> retList = new ArrayList<>();
+        if (listSongs.size() > 0) {
+            for (ListSong listSong : listSongs) {
+                HashMap<String, Object> retMap = new HashMap<>();
+                retMap.put("id", listSong.getId());
+                Song song = songService.selectByPrimaryKey(listSong.getSongId());
+                if (song != null){
+                    retMap.put("song", song);
+                }
+                retList.add(retMap);
+            }
+        }
         Map<String, Object> map = new HashMap<>();
-        map.put("msg", listSongs);
+        map.put("msg", retList);
         return R.ok(map);
     }
 

@@ -96,6 +96,21 @@ public class SongController {
     }
 
     /**
+     * 根据歌曲名称进行模糊查询
+     *
+     * @param songName
+     * @return
+     */
+    @RequestMapping(value = "/songOfName", method = RequestMethod.GET)
+    public R songOfName(String songName) {
+        System.out.println(songName);
+        List<Song> songs = songService.songOfName('%'+songName+'%');
+        Map<String, Object> map = new HashMap<>();
+        map.put("msg", songs);
+        return R.ok(map);
+    }
+
+    /**
      * 删除歌曲
      *
      * @return
@@ -270,4 +285,6 @@ public class SongController {
             return R.error("发生异常" + e.getMessage());
         }
     }
+
+
 }
