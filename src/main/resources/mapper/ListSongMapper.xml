@@ -30,10 +30,10 @@
                 #{id},
             </if>
             <if test="songId != null">
-                #{song_id},
+                #{songId},
             </if>
             <if test="songListId != null">
-                #{song_list_id},
+                #{songListId},
             </if>
         </trim>
     </insert>

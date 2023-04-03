@@ -110,6 +110,20 @@ public class SongController {
         return R.ok(map);
     }
 
+
+    /**
+     * 查询所有歌曲
+     *
+     * @return
+     */
+    @RequestMapping(value = "/selectAll", method = RequestMethod.GET)
+    public R selectAll() {
+        List<Song> songs = songService.selectAll();
+        Map<String, Object> map = new HashMap<>();
+        map.put("msg", songs);
+        return R.ok(map);
+    }
+
     /**
      * 删除歌曲
      *
