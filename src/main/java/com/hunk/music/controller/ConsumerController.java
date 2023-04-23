@@ -36,7 +36,8 @@ public class ConsumerController {
      * @return
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public R addConsumer(Consumer consumer) {
+    public R addConsumer(@RequestBody Consumer consumer) {
+        System.out.println(consumer.toString());
         boolean ret = consumerService.insert(consumer);
         Map<String, Object> map = new HashMap<>();
         if (ret) {
