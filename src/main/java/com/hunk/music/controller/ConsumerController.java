@@ -3,12 +3,16 @@ package com.hunk.music.controller;
 import com.hunk.music.domain.Consumer;
 import com.hunk.music.service.ConsumerService;
 import com.hunk.music.utils.R;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +28,7 @@ public class ConsumerController {
     /**
      * 默认的歌曲头像地址
      */
-    private String picPath = "/img/songPic/tubiao.jpg";
+    private String picPath = "/img/userAvatorImages/hhh.jpg";
 
     @Resource
     private ConsumerService consumerService;
@@ -142,4 +146,63 @@ public class ConsumerController {
         return R.ok(map);
     }
 
+    /**
+     * 更歌手头像文件
+     *
+     * @param file
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/updateConsumerPic", method = RequestMethod.POST)
+    public R updateConsumerPic(MultipartFile file, Integer id) {
+        if (file.isEmpty()) {
+            return R.error("文件上传失败");
+        }
+        Consumer consumerObj = consumerService.selectByPrimaryKey(id);
+        // 如果歌手头像不是默认的就把图片资源删除
+        if (!consumerObj.getAvator().equals(picPath)) {
+            File tempFile = new File(consumerObj.getAvator().trim());
+            String fileName = tempFile.getName();
+            String filePath = System.getProperty("user.dir") + System.getProperty("file.separator") + "img"
+                    + System.getProperty("file.separator") + "userAvatorImages" + System.getProperty("file.separator") + fileName;
+            System.out.println(filePath);
+            FileSystemUtils.deleteRecursively(new File(filePath));
+        }
+
+        // 获取文件明  加上毫秒值是为了区分相同的名称
+        String fileName = System.currentTimeMillis() + file.getOriginalFilename();
+        // 服务器存储图片的路径
+        String filePath = System.getProperty("user.dir") + System.getProperty("file.separator") + "img"
+                + System.getProperty("file.separator") + "userAvatorImages";
+
+        // 判断路径是否存在 如果不存在就新增
+        File temFile = new File(filePath);
+        if (!temFile.exists()) {
+            temFile.mkdir();
+        }
+
+        // 实际静态资源存放的地方
+        File dest = new File(filePath + System.getProperty("file.separator") + fileName);
+
+        // 数据库里写的地址
+        String storeAvatarPath = "/img/userAvatorImages/" + fileName;
+
+        try {
+            file.transferTo(dest);
+            Consumer consumer = new Consumer();
+            consumer.setId(id);
+            consumer.setAvator(storeAvatarPath);
+            boolean update = consumerService.update(consumer);
+            Map<String, Object> map = new HashMap<>();
+            if (update) {
+                map.put("msg", "更新成功");
+                map.put("pic", storeAvatarPath);
+                return R.ok(map);
+            } else {
+                return R.error("更新失败");
+            }
+        } catch (IOException e) {
+            return R.error("发生异常" + e.getMessage());
+        }
+    }
 }
