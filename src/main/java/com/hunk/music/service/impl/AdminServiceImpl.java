@@ -28,4 +28,34 @@ public class AdminServiceImpl implements AdminService {
         }
         return false;
     }
+
+    @Override
+    public int consumerCount() {
+        return adminMapper.consumerCount();
+    }
+
+    @Override
+    public int songCount() {
+        return adminMapper.songCount();
+    }
+
+    @Override
+    public int singerCount() {
+        return adminMapper.singerCount();
+    }
+
+    @Override
+    public int songListCount() {
+        return adminMapper.songListCount();
+    }
+
+    @Override
+    public int getConsumerSexCountByWoman() {
+        return adminMapper.getConsumerSexCountByWoman();
+    }
+
+    @Override
+    public int getConsumerSexCountByMale() {
+        return adminMapper.getConsumerSexCountByMale();
+    }
 }

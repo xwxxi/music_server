@@ -10,4 +10,29 @@
     <select id="verifyPassword" resultType="java.lang.Integer">
         select count(*) from admin where name=#{name} and password=#{password}
     </select>
+
+    <select id="consumerCount" resultType="java.lang.Integer">
+        select count(*) from consumer
+    </select>
+
+    <select id="songCount" resultType="java.lang.Integer">
+        select count(*) from song
+    </select>
+
+    <select id="singerCount" resultType="java.lang.Integer">
+        select count(*) from singer
+    </select>
+
+    <select id="songListCount" resultType="java.lang.Integer">
+        select count(*) from song
+    </select>
+
+    <select id="getConsumerSexCountByWoman" resultType="java.lang.Integer">
+        select count(*) from consumer where sex = 0
+    </select>
+
+    <select id="getConsumerSexCountByMale" resultType="java.lang.Integer">
+        select count(*) from consumer where sex = 1
+    </select>
+
 </mapper>
